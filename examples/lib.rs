@@ -1,6 +1,6 @@
 use anyhow::Result;
 use std::time::Duration;
-use tokio_cron_scheduler::{Job, JobScheduler};
+use tokio_cron_scheduler_easy::{Job, JobScheduler};
 use tracing::{error, info, warn};
 
 pub async fn run_example(mut sched: JobScheduler) -> Result<()> {

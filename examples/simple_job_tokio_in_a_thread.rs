@@ -1,7 +1,7 @@
 use crate::lib::run_example;
 use std::error::Error;
 use std::time::Duration;
-use tokio_cron_scheduler::{Job, JobScheduler};
+use tokio_cron_scheduler_easy::{Job, JobScheduler};
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 

@@ -1,6 +1,6 @@
 mod lib;
 use crate::lib::run_example;
-use tokio_cron_scheduler::{
+use tokio_cron_scheduler_easy::{
     JobScheduler, PostgresMetadataStore, PostgresNotificationStore, SimpleJobCode,
     SimpleNotificationCode,
 };

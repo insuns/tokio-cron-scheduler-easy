@@ -1,6 +1,6 @@
 use crate::lib::run_example;
 use std::time::Duration;
-use tokio_cron_scheduler::{
+use tokio_cron_scheduler_easy::{
     Job, JobScheduler, NatsMetadataStore, NatsNotificationStore, SimpleJobCode,
     SimpleNotificationCode,
 };
