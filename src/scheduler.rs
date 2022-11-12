@@ -4,7 +4,7 @@ use crate::job::job_data::{JobState, JobType};
 #[cfg(feature = "has_bytes")]
 use crate::job::job_data_prost::{JobState, JobType};
 use crate::JobSchedulerError;
-use chrono::Utc;
+use chrono::Local;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::broadcast::Sender;
@@ -60,7 +60,7 @@ impl Scheduler {
                     break 'next_tick;
                 }
                 tokio::time::sleep(Duration::from_millis(500)).await;
-                let now = Utc::now();
+                let now = Local::now();
                 let next_ticks = {
                     let mut w = metadata_storage.write().await;
                     w.list_next_ticks().await
@@ -91,8 +91,8 @@ impl Scheduler {
                 next_ticks.retain(|n| n.next_tick != 0);
 
                 let must_runs = next_ticks.iter().filter_map(|n| {
-                    let next_tick = n.next_tick_utc();
-                    let last_tick = n.last_tick_utc();
+                    let next_tick = n.next_tick_local();
+                    let last_tick = n.last_tick_local();
                     let job_type: JobType = JobType::from_i32(n.job_type).unwrap();
 
                     let must_run = match (last_tick.as_ref(), next_tick.as_ref(), job_type) {
@@ -158,7 +158,7 @@ impl Scheduler {
                                 let job_type: JobType = JobType::from_i32(job.job_type).unwrap();
                                 let schedule = job.schedule();
                                 let repeated_every = job.repeated_every();
-                                let next_tick = job.next_tick_utc();
+                                let next_tick = job.next_tick_local();
                                 let next_tick = match job_type {
                                     JobType::Cron => schedule.and_then(|s| s.after(&now).next()),
                                     JobType::OneShot => None,

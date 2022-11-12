@@ -8,7 +8,7 @@ use crate::simple::{
     SimpleJobCode, SimpleMetadataStore, SimpleNotificationCode, SimpleNotificationStore,
 };
 use crate::store::{MetaDataStorage, NotificationStore};
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, FixedOffset, Local, NaiveDateTime};
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -388,7 +388,7 @@ impl JobsSchedulerLocked {
     pub async fn next_tick_for_job(
         &mut self,
         job_id: Uuid,
-    ) -> Result<Option<DateTime<Utc>>, JobSchedulerError> {
+    ) -> Result<Option<DateTime<Local>>, JobSchedulerError> {
         if !self.inited().await {
             let mut s = self.clone();
             s.init().await?;
@@ -399,7 +399,7 @@ impl JobsSchedulerLocked {
                 v.map(|vv| vv.next_tick)
                     .filter(|t| *t != 0)
                     .map(|ts| NaiveDateTime::from_timestamp(ts as i64, 0))
-                    .map(|ts| DateTime::from_utc(ts, Utc))
+                    .map(|ts| DateTime::from_local(ts, FixedOffset::east(8 * 60 * 60)))
             })
         };
         next_tick

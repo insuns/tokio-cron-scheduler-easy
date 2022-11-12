@@ -5,7 +5,7 @@ use crate::job::job_data_prost::{JobAndNextTick, JobStoredData};
 use crate::job::JobToRunAsync;
 use crate::store::{CodeGet, DataStore, InitStore};
 use crate::JobSchedulerError;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local};
 use std::future::Future;
 use std::pin::Pin;
 use uuid::Uuid;
@@ -17,8 +17,8 @@ pub trait MetaDataStorage: DataStore<JobStoredData> + InitStore {
     fn set_next_and_last_tick(
         &mut self,
         guid: Uuid,
-        next_tick: Option<DateTime<Utc>>,
-        last_tick: Option<DateTime<Utc>>,
+        next_tick: Option<DateTime<Local>>,
+        last_tick: Option<DateTime<Local>>,
     ) -> Pin<Box<dyn Future<Output = Result<(), JobSchedulerError>> + Send>>;
     fn time_till_next_job(
         &mut self,

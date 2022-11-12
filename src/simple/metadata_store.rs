@@ -4,7 +4,7 @@ use crate::job::job_data::{JobAndNextTick, JobStoredData};
 use crate::job::job_data_prost::{JobAndNextTick, JobStoredData};
 use crate::store::{DataStore, InitStore, MetaDataStorage};
 use crate::JobSchedulerError;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local};
 use std::collections::HashMap;
 use std::future::Future;
 use std::pin::Pin;
@@ -102,8 +102,8 @@ impl MetaDataStorage for SimpleMetadataStore {
     fn set_next_and_last_tick(
         &mut self,
         guid: Uuid,
-        next_tick: Option<DateTime<Utc>>,
-        last_tick: Option<DateTime<Utc>>,
+        next_tick: Option<DateTime<Local>>,
+        last_tick: Option<DateTime<Local>>,
     ) -> Pin<Box<dyn Future<Output = Result<(), JobSchedulerError>> + Send>> {
         let data = self.data.clone();
         Box::pin(async move {
@@ -127,7 +127,7 @@ impl MetaDataStorage for SimpleMetadataStore {
         let data = self.data.clone();
         Box::pin(async move {
             let r = data.read().await;
-            let now = Utc::now();
+            let now = Local::now();
             let now = now.timestamp() as u64;
             let val = r
                 .iter()

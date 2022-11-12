@@ -4,7 +4,7 @@ use crate::job::job_data::{JobStoredData, JobType};
 use crate::job::job_data_prost::{JobStoredData, JobType};
 use crate::job::{Job, JobToRunAsync};
 use crate::{JobScheduler, JobSchedulerError, JobToRun};
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local};
 use cron::Schedule;
 use tokio::sync::oneshot::Receiver;
 use tracing::error;
@@ -43,19 +43,19 @@ impl Job for NonCronJob {
         })
     }
 
-    fn last_tick(&self) -> Option<DateTime<Utc>> {
-        self.data.last_tick_utc()
+    fn last_tick(&self) -> Option<DateTime<Local>> {
+        self.data.last_tick_local()
     }
 
-    fn set_last_tick(&mut self, tick: Option<DateTime<Utc>>) {
+    fn set_last_tick(&mut self, tick: Option<DateTime<Local>>) {
         self.data.set_last_tick(tick);
     }
 
-    fn next_tick(&self) -> Option<DateTime<Utc>> {
-        self.data.next_tick_utc()
+    fn next_tick(&self) -> Option<DateTime<Local>> {
+        self.data.next_tick_local()
     }
 
-    fn set_next_tick(&mut self, tick: Option<DateTime<Utc>>) {
+    fn set_next_tick(&mut self, tick: Option<DateTime<Local>>) {
         self.data.set_next_tick(tick)
     }
 
