@@ -385,6 +385,7 @@ impl JobsSchedulerLocked {
 
     /// `next_tick_for_job` returns the date/time for when the next tick will
     /// be for a job
+    #[allow(deprecated)]
     pub async fn next_tick_for_job(
         &mut self,
         job_id: Uuid,
@@ -400,7 +401,10 @@ impl JobsSchedulerLocked {
                     .filter(|t| *t != 0)
                     .map(|ts| NaiveDateTime::from_timestamp_opt(ts as i64, 0))
                     .unwrap()
-                    .map(|ts| DateTime::from_local(ts, FixedOffset::east_opt(8 * 60 * 60).unwrap()))
+                    .map(|ts| {
+                        DateTime::from_local(ts, FixedOffset::east_opt(8 * 60 * 60).unwrap())
+                        // ts.and_local_timezone(FixedOffset::east_opt(8 * 60 * 60).unwrap()).unwrap()
+                    })
             })
         };
         next_tick
