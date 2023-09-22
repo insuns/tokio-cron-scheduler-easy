@@ -398,8 +398,9 @@ impl JobsSchedulerLocked {
             r.get(job_id).await.map(|v| {
                 v.map(|vv| vv.next_tick)
                     .filter(|t| *t != 0)
-                    .map(|ts| NaiveDateTime::from_timestamp(ts as i64, 0))
-                    .map(|ts| DateTime::from_local(ts, FixedOffset::east(8 * 60 * 60)))
+                    .map(|ts| NaiveDateTime::from_timestamp_opt(ts as i64, 0))
+                    .unwrap()
+                    .map(|ts| DateTime::from_local(ts, FixedOffset::east_opt(8 * 60 * 60).unwrap()))
             })
         };
         next_tick
